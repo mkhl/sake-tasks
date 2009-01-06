@@ -1,0 +1,12 @@
+namespace 'xcode' do
+  namespace 'defaults' do
+    desc 'Set Xcode ORGANIZATIONNAME to a reasonable default'
+    task :set_name, [:name] do |task, args|
+      args.with_defaults(:name => '')
+      name = args[:name]
+      name = %x{git config user.name}.strip  if name.empty?
+      name = %x{dscl . read "$HOME" realname|cut -f3 -d:}.strip  if name.empty?
+      sh "defaults write com.apple.xcode PBXCustomTemplateMacroDefinitions '{ ORGANIZATIONNAME = \"#{name}\"; }'"
+    end
+  end
+end

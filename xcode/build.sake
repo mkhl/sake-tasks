@@ -1,0 +1,8 @@
+namespace 'xcode' do
+  desc 'Build the specified target of the current project.'
+  task :build, [:target, :config] do |task, args|
+    target = args.target ? "-target #{args.target}" : '-activetarget'
+    config = args.config ? "-configuration #{args.config}" : '-activeconfiguration'
+    sh "xcodebuild #{target} #{config} build"
+  end
+end

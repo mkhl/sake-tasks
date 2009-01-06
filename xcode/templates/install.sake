@@ -1,0 +1,8 @@
+namespace 'xcode' do
+  namespace 'templates' do
+    desc 'Install Xcode Index Templates'
+    task :install do
+      sh '/Developer/Extras/Xcode\ Index\ Templates/install_templates'
+    end
+  end
+end
