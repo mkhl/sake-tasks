@@ -1,0 +1,20 @@
+namespace 'textmate' do
+  namespace 'system' do
+    desc "Update TextMate's system-wide support"
+    task :update do
+      app_support = %x{osascript -e 'get POSIX path of (path to application support from local domain)'}.chomp
+      textmate_dir = File.join(app_support, 'TextMate')
+      return  unless File.directory? textmate_dir
+      Dir.chdir(textmate_dir) {
+        if File.directory? '.svn'
+          sh 'svn update'
+        elsif File.directory? '.git'
+          sh 'git pull origin'
+        else
+          puts "#{$PROGRAM_NAME}: Don't know how to update #{File.dirname(textmate_dir)}"
+        end
+      }
+      sh %q{osascript -e 'tell app "TextMate" to reload bundles'}
+    end
+  end
+end

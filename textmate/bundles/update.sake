@@ -1,0 +1,22 @@
+namespace 'textmate' do
+  namespace 'bundles' do
+    desc "Update TextMate's user-local bundles"
+    task :update do
+      app_support = %x{osascript -e 'get POSIX path of (path to application support from user domain)'}.chomp
+      bundles_dir = File.join(app_support, 'TextMate', 'Pristine Copy', 'Bundles')
+      return  unless File.directory? bundles_dir
+      FileList[File.join(bundles_dir, '*.tmbundle')].each { |bundle|
+        Dir.chdir(bundle) {
+          if File.directory? '.svn'
+            sh 'svn update'
+          elsif File.directory? '.git'
+            sh 'git pull origin'
+          else
+            puts "#{$PROGRAM_NAME}: Don't know how to update #{File.dirname(bundle)}"
+          end
+        }
+      }
+      sh %q{osascript -e 'tell app "TextMate" to reload bundles'}
+    end
+  end
+end
