@@ -11,7 +11,7 @@ namespace 'textmate' do
         elsif File.directory? '.git'
           sh 'git pull origin'
         else
-          puts "#{$PROGRAM_NAME}: Don't know how to update #{File.basename(bundle)}"
+          puts "#{File.basename($PROGRAM_NAME)}: Don't know how to update #{File.basename(bundle)}"
         end
       }
     end
